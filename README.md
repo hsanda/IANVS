@@ -13,44 +13,106 @@ As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, e
 
 IANVS CoAP Client-side code was not used for the experimental part of the current paper. Code release is to appear on an extension paper work.
 
-# I) Set-Up and Running Experiments
+# I) Setting-Up and Running Experiments
 
-## A) IANVS CoAPServer
+## A) IANVS CoAPServer [Set-up]
 IANVS CoAPServer for LoPy4 Pycom device code is in folder `/microPython/`.
 
-
-#### Firmware of the LoPy4 device
-This source code is known to be compatible with the following LoPy4 Pycom firmwares ([Link to FWs](https://docs.pycom.io/advance/downgrade/) , used **Legacy** versions). We had issues with the Wi-Fi driver in more recent version of the firmware than 1.18.2.r7.
+### Pre-Requirements: Firmware version
+The source code is known to be compatible with the following **Legacy** Pycom firmwares ([Link](https://docs.pycom.io/advance/downgrade/)):
 ```
 Pycom MicroPython 1.18.0    [v1.8.6-849-046b350]; LoPy with ESP32 (lorawan='1.0.2')
 Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237]; LoPy4 with ESP32
 ```
-
-#### MTD Parameters
-Are hardcoded in the main() function of `/microPython/main.py`
-* N = 2048
-* periods = 5
-* period_length_seconds = 10
-
-## B) The simulated attacker tool named hPingTool
-Attacker code is in file `/hPingTool/hPingRand.sh`.
-### Pre Requirements
-* Install the hPing3 tool, make sure it is available throught the terminal command hping3
-* Remember to grant sudo access to the terminal before executing the hPingTool
-* Connected to the same Wi-Fi as the Pycom (optimally through LAN)
-
-### Usage
-Assuming that the PyCom has IP-address 192.168.2.16.
-We are attacking two times per second in the range of 1024 ports for one hour.
+ **WARNING:** We had issues with the Wi-Fi driver with versions of the firmware >1.18.2.r7.
 
 
-```terminal
-cd hPingTool/
-bash hPingRand.sh 192.168.2.16 2 10000 11023 3600
+###  MTD Parameters Set-up
+The paramenters to run  different experiments are hardcoded in the main() function of `/microPython/main.py`. They are
+
+* **N**:   number of hopping ports (e.g. 1024)
+* **period_length_seconds**: MTD period length in seconds (e.g. 10)
+* **periods**:  number of periods to run  (e.g. 100)
+
+The tuples tested in the paper are composed of different combinations of (**N**, **period_length_seconds**).
+
+**NOTE**: The port hopping is done with a base-port of 10001
+
+
+
+## B) Attacker Code [Set-up]
+The attacker is implemented using the [hPing3](http://www.hping.org/hping3.html) TCP/UDP packet generator tool.
+
+In the port-hopping evaluation scenario of the paper, we only test if the attacker has found the current CoAPServer open port or not. Consequently, the UDP payload is not relevant, and we generate UDP packets with zero-length payload.
+
+The attacker code is in the bash script file `/hPingTool/hPingRand.sh`.
+
+#### Pre-Requirements
+*  [Install the hPing3 tool](http://www.hping.org/download.html) (it is on the repositories of main linux distributions). You can check if its installed by running `hping3` on a terminal.  The hPing3 tool will needs `sudo` access.
+
+* The terminal running `hping3` should be on the same LAN as the LoPy4 (to avoid routing set up). We were connected over Ethernet on the same Wi-Fi Router as the LoPy4.
+
+
+## C) Running Experiments
+
+#### 1) Important parameters to set/know:
+* **N**: number of hopping ports (e.g. 2048)
+* **period_length_seconds**: MTD period length in seconds (e.g.  2357)
+* **periods**: number of periods (e.g.  5)
+* **IP**: Address of CoAP Server (e.g.  192.168.1.84)
+
+
+#### 2) Start the Attacker (hPing).
+The attacker has knowledge of the **IP** of the CoAP server, and **N** the number of hopping ports (2048) (including the base port **10001**). Then, we run the command:
+```
+#./hPingRand.sh: usage: hPingRand ip portsPerSecond portFrom portToo durationSeconds
+sudo ./hPingRand.sh 192.168.1.84 2 10001 12048 60000
 ```
 
+Where:
+*  **portsPerSecond** to **2**. As defined on the paper, 2 attacks per second.
+* **portFrom** to **10001**. The base port.
+* **portToo** to **12048**. The base port (10001) + N (2048) - 1.
+*  **durationSeconds** to **60000** (60 hours). We stop the attacker manually.
 
-# II) Collecting the Experimental Results
+
+
+
+#### 3) Start the LoPy4 code.
+
+```
+(...)
+Found the network
+WLAN connection to YourWi-Fi succeeded!
+IP-address: 192.168.1.84
+Updating internal clock.
+N=2048, T(seg)=2357 , Repeat=5
+BEGIN: (2020, 2, 21, 18, 45, 44, 4, 52)
+KEY: b'74657374746573747465737474657374'
+MTDPort-Range: 10001-12048
+[0] port: 10746
+[0] attk: 2
+[1] port: 10214
+[1] attk: 1
+[2] port: 10653
+[2] attk: 1
+[3] port: 11956
+[3] attk: 2
+[4] port: 11599
+[4] attk: 1
+END: (2020, 2, 21, 22, 2, 11, 4, 52)
+Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237] on 2019-05-14; LoPy4 with ESP32
+Type "help()" for more information.
+>>>
+```
+The experiment is concludes and the aggregated results are stored on the LoPy4 internal flash storage (see next section)on a CSV file. The fine grained information per period is lots, and only the aggregated results is stored. For example, the above experiment will be logged in a single line as:
+
+```
+2048,5,2357000,5
+```
+(The meaning of that line is explained in the next subsection.)
+
+# II) Collecting and Interpreting the Experimental Results
 
 Experimental results are logged in the Pycom's internal flash (path `/flash`) and aggregated by day.
 
@@ -78,4 +140,8 @@ A line has the following format
   * `sum_success`: Number of MTD Periods that where attacked (i.e. the port was found)
 
 
-For example `2048,5,1461000,3` stands for an experiment where: `2048` ports were used for hopping, `5` MTD periods where evaluated, each with a length of `1461000` ms, and in `3` periods the port was found by the attacker.
+For example `2048,5,1461000,3` stands for an experiment where:
+* `2048` ports were used for hopping,
+* `5` periods where evaluated,  
+* `1461000` ms was the length of each period, and
+* in `3` periods the port was found by the attacker.
