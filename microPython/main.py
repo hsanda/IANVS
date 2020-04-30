@@ -1,6 +1,7 @@
 # Firmware : Using Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237]; LoPy4 with ESP32
 import pycom
 
+
 import os
 import binascii
 import ustruct as struct
@@ -69,10 +70,14 @@ def setup_coap(server, port, timeout_ms, period):
 
 
 # Returns an 8-byte array of the time
-def create_iv_epoch_rounded(seconds):
-    """Returns an 8-byte array of the time"""
+def create_iv_epoch_rounded(period_length_mseconds):
+    """Returns an 8-byte array of the time
+    :input period_length_mseconds: MTD period length in  seconds"""
     epoch = time.time()
-    epoch_rounded = epoch - (epoch % seconds)
+
+    #TODO porperly explain this line of code
+    # The IV will be the nearest epoch assuming the first MTD period started with the unix epoch time
+    epoch_rounded = epoch - (epoch % period_length_mseconds)
     return (epoch_rounded).to_bytes(8, "little")
 
 # Create the UDP port out of the bytearray
@@ -102,10 +107,9 @@ def experiment(N, periods, milliseconds):
     """
     server = microcoapy.Coap()
     base_port = 10001 # we chose a base port to avoid well-known ports (e.g. pycon has FTP port )
-    port = base_port
 
     # Chacha20 Setup
-    # We read the PSK from a file. WARNING; Testing pourposes very weak Key material.
+    # We read the PSK from a file. WARNING: For testing pourposes, this is very weak Key material.
     key_file = open('key.txt', 'r')
     key = bytearray(key_file.read())
 
@@ -120,8 +124,9 @@ def experiment(N, periods, milliseconds):
         crypt = chacha2.ChaCha(key, iv, rounds=20) # By default cahach2 has lesser rounds, with make it incompatible with Desktop versions of ChaCha20
 
         # Using the previous port for the next round
-        message_encrypt = bytearray(port.to_bytes(2, 'little'))
+        message_encrypt = bytearray(_SERVER_PORT.to_bytes(2, 'little'))
         message_encrypt += bytes(64 - len(message_encrypt))
+
 
         data = crypt.next(message_encrypt)
         port = base_port + (create_udp_port(data) % N)
@@ -132,7 +137,7 @@ def experiment(N, periods, milliseconds):
 
     # Creating/Opening the file to append the results
     time_tuple = time.localtime()
-    # we prepend YYYY-m-dd to "restuls.txt"
+    # we create a file named "YYYY-m-dd" to "-restuls.txt"
     results_filename = str(time_tuple[0]) + "-" + str(time_tuple[1]) + "-" +  str(time_tuple[2]) + '-results.txt'
 
     with open(results_filename, 'a') as datafile:
@@ -154,9 +159,10 @@ def main():
     update_internal_clock()
 
     N = 2048
-    periods = 5
     period_length_seconds = 10
     period_length_ms_array = [period_length_seconds*1000] # In miliseconds. For doing multiple tests, this is an array of period lengths (ms)
+
+    periods = 5
 
     for period_length_ms in period_length_ms_array:
         print("N=" + str(N) + ", T(seg)=" + str(period_length_seconds) + " , Repeat=" + str(periods))
