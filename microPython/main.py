@@ -77,7 +77,7 @@ def setup_coap(server, port, period_length_ms, period_nr):
 def create_iv_epoch_rounded(period_length_seconds):
     """
     Creates an 8-byte array of the time for the IV
-    :input period_length_seconds: MTD period length in  seconds
+    :param :input period_length_seconds: MTD period length in  seconds
     :return: 8-bytte array of the time
     """
 
@@ -141,9 +141,9 @@ def experiment(N, periods, period_length_ms):
     # Iterate through the MTD periods, one at a time
     for period in range(0, periods):
         # WARNING: Be aware that this IV creation will cause trouble
-        # if tried to synchronize with a client. In the interest of our
+        # if you tried to synchronize with a client. In the interest of our
         # experiments we kept it like this, since we wanted to operate
-        # with full periods.
+        # with full period lengths.
         iv = create_iv_epoch_rounded(int(period_length_ms / 1000))
         print("IV:", binascii.hexlify(iv))
 
@@ -199,8 +199,8 @@ def main():
 
     # Possibility for running multiple experiments in a row
     # Append the experiments one after one
-    N = [5]
-    period_length_ms = [180 * 1000]  # in milliseconds (10 seconds)
+    N = [1024]
+    period_length_ms = [10 * 1000]  # in milliseconds (10 seconds)
 
     # Number of times we run each experiment
     periods = 5
