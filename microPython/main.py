@@ -77,7 +77,7 @@ def setup_coap(server, port, period_length_ms, period_nr):
 def create_iv_epoch_rounded(period_length_seconds):
     """
     Creates an 8-byte array of the time for the IV
-    :param :input period_length_seconds: MTD period length in  seconds
+    :param input period_length_seconds: MTD period length in  seconds
     :return: 8-bytte array of the time
     """
 
