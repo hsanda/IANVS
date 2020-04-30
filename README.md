@@ -17,6 +17,7 @@ IANVS CoAP Client-side code was not used for the experimental part of the curren
 
 ## A) IANVS CoAPServer
 IANVS CoAPServer for LoPy4 Pycom device code is in folder `/microPython/`.
+Make sure you are in this folder when uploading the code to the Pycom device.
 
 
 #### Firmware of the LoPy4 device
