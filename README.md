@@ -1,5 +1,10 @@
 # IANVS: A Moving Target Defense Framework for the IoT (ISCC 2020)
 
+>Anyone who attempts to generate random numbers by deterministic means is, of course, living in a state of sin.
+>
+>--John von Neumann
+>
+
 ### Companion Paper
 This source code goes with the peer-reviewed paper :
 ```
@@ -8,10 +13,10 @@ Renzo E. Navas, Håkon Sandaker, et al.
 2020 IEEE Symposium on Computers and Communications (ISCC).
 IEEE, 2020 (forthcoming).
 ```
-This is the source code used to generate the experimental results of the paper.
+This is the source code used to generate the experimental results of the paper.  
 As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, exact results can not be replicated. However, for a given set of IANVS-MTD and attacker parameters, the results statistically converge to the same values.
 
-IANVS CoAP Client-side code was not used for the experimental part of the current paper. Code release is to appear on an extension paper work.
+*NOTE:* IANVS CoAP Client-side code was not used for the experimental part of the current paper. Client-side Code release is to appear on an extension paper work.
 
 -----------------------------------------
 # Table of contents
