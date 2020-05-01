@@ -1,6 +1,6 @@
 # IANVS: A Moving Target Defense Framework for the IoT (ISCC 2020)
 
-### Companion peer-reviewed Paper
+### Companion Paper
 This source code goes with the peer-reviewed paper :
 ```
 Renzo E. Navas, Håkon Sandaker, et al.
@@ -16,8 +16,11 @@ IANVS CoAP Client-side code was not used for the experimental part of the curren
 # I) Setting-Up and Running Experiments
 
 ## A) IANVS CoAPServer [Set-up]
-IANVS CoAPServer for LoPy4 Pycom device code is in folder `/microPython/`.
-Make sure you are in this folder when uploading the code to the Pycom device.
+
+IANVS CoAPServer for LoPy4 Pycom device code is a MicroPyton project in folder `/microPython/`.
+Follow the [Pycom documentation](https://docs.pycom.io/gettingstarted/) to set up a Pycom Development environment.
+
+
 
 ### Pre-Requirements: Firmware version
 The source code is known to be compatible with the following **Legacy** Pycom firmwares ([Link](https://docs.pycom.io/advance/downgrade/)):
@@ -25,7 +28,7 @@ The source code is known to be compatible with the following **Legacy** Pycom fi
 Pycom MicroPython 1.18.0    [v1.8.6-849-046b350]; LoPy with ESP32 (lorawan='1.0.2')
 Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237]; LoPy4 with ESP32
 ```
- **WARNING:** We had issues with the Wi-Fi driver with versions of the firmware >1.18.2.r7.
+ **WARNING:** We had issues with the Wi-Fi driver in versions of the firmware >1.18.2.r7.
 
 
 ###  MTD Parameters Set-up
@@ -74,12 +77,14 @@ Where:
 *  **portsPerSecond** to **2**. As defined on the paper, 2 attacks per second.
 * **portFrom** to **10001**. The base port.
 * **portToo** to **12048**. The base port (10001) + N (2048) - 1.
-*  **durationSeconds** to **60000** (60 hours). We stop the attacker manually.
+*  **durationSeconds** to **60000** (16 hours). We stop the attacker manually.
 
 
 
 
 #### 3) Start the LoPy4 code.
+[LoPy Doc - How to run code](https://docs.pycom.io/gettingstarted/programming/).
+A typical serial output after boot and a successful experiment run is the following:
 
 ```
 (...)
@@ -106,7 +111,7 @@ Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237] on 2019-05-14; LoPy4 with ESP32
 Type "help()" for more information.
 >>>
 ```
-The experiment is concludes and the aggregated results are stored on the LoPy4 internal flash storage (see next section)on a CSV file. The fine grained information per period is lots, and only the aggregated results is stored. For example, the above experiment will be logged in a single line as:
+The experiment is concluded when `END` is shown, and the aggregated results are stored on the LoPy4 internal flash storage on a CSV file (see next section). The fine-grained information per period is lost, and only the aggregated results are stored. For example, the above experiment will be logged in a single line as:
 
 ```
 2048,5,2357000,5
@@ -146,3 +151,7 @@ For example `2048,5,1461000,3` stands for an experiment where:
 * `5` periods where evaluated,  
 * `1461000` ms was the length of each period, and
 * in `3` periods the port was found by the attacker.
+
+
+------
+01/04/2020
