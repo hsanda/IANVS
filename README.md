@@ -29,7 +29,7 @@ As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, e
 ---------------------------
 # 1) Setting-Up and Running Experiments <a name="setup"></a>
 
-## 1.1) IANVS CoAPServer [Set-up] <a name="lopy"></a>
+## I) IANVS CoAPServer [Set-up] <a name="lopy"></a>
 
 IANVS CoAPServer for LoPy4 Pycom device code is a MicroPyton project in folder `/microPython/`.
 Follow the [Pycom documentation](https://docs.pycom.io/gettingstarted/) to set up a Pycom Development environment.
@@ -58,7 +58,7 @@ The tuples tested in the paper are composed of different combinations of (**N**,
 
 
 
-## 1.2) Attacker Code [Set-up]  <a name="hPing3"></a>
+## II) Attacker Code [Set-up]  <a name="hPing3"></a>
 The attacker is implemented using the [hPing3](http://www.hping.org/hping3.html) TCP/UDP packet generator tool.
 
 In the port-hopping evaluation scenario of the paper, we only test if the attacker has found the current CoAPServer open port or not. Consequently, the UDP payload is not relevant, and we generate UDP packets with zero-length payload.
@@ -71,16 +71,16 @@ The attacker code is in the bash script file `/hPingTool/hPingRand.sh`.
 * The terminal running `hping3` should be on the same LAN as the LoPy4 (to avoid routing set up). We were connected over Ethernet on the same Wi-Fi Router as the LoPy4.
 
 
-## 1.3) Running Experiments  <a name="running"></a>
+## III) Running Experiments  <a name="running"></a>
 
-#### I) Important parameters to set/know:
+#### A) Important parameters to set/know:
 * **N**: number of hopping ports (e.g. 2048)
 * **period_length_seconds**: MTD period length in seconds (e.g.  2357)
 * **periods**: number of periods (e.g.  5)
 * **IP**: Address of CoAP Server (e.g.  192.168.1.84)
 
 
-#### II) Start the Attacker (hPing).
+#### B) Start the Attacker (hPing).
 The attacker has knowledge of the **IP** of the CoAP server, and **N** the number of hopping ports (2048) (including the base port **10001**). Then, we run the command:
 ```
 #./hPingRand.sh: usage: hPingRand ip portsPerSecond portFrom portToo durationSeconds
@@ -96,7 +96,7 @@ Where:
 
 
 
-### III) Start the LoPy4 code.
+### C) Start the LoPy4 code.
 [LoPy Doc - How to run code](https://docs.pycom.io/gettingstarted/programming/).
 A typical serial output after boot and a successful experiment run is the following:
 
@@ -168,4 +168,4 @@ For example `2048,5,1461000,3` stands for an experiment where:
 
 
 ------
-01/04/2020
+END - 01/04/2020 - BEGIN
