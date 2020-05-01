@@ -83,9 +83,13 @@ def create_iv_epoch_rounded(period_length_seconds):
 
     epoch = time.time()
 
-    # Rounding the current epoch time to the nearest second
-    # based on our period length (i.e. if we have 30 minutes
-    # we round to only full and half hours)
+    # Floor-Rounding the current epoch time to the nearest epoch
+    # that is a multiple of our period length.
+    # (e.g. if period is 1 hour, and we launched this at
+    #     01:33:11 UTC on 1 January 1970,
+    # Epoch will be Floor-Rounded to exact multiples of one hour, in this case
+    #     01:00:00 UTC on 1 January 1970)
+
     epoch_rounded = epoch - (epoch % period_length_seconds)
     return epoch_rounded.to_bytes(8, "little")
 
@@ -125,8 +129,9 @@ def experiment(N, periods, period_length_ms):
     """
 
     server = microcoapy.Coap()
-    # We chose a base port to avoid well-known ports in the lower bound
-    # (e.g. Pycom has a dedicated FTP port )
+
+    # We use a base port to avoid collisions with lower number
+    # well-known ports that may be in use
     base_port = 10001
 
     # ChaCha20 Setup
@@ -140,16 +145,22 @@ def experiment(N, periods, period_length_ms):
 
     # Iterate through the MTD periods, one at a time
     for period in range(0, periods):
-        # WARNING: Be aware that this IV creation will cause trouble
-        # if you tried to synchronize with a client. In the interest of our
-        # experiments we kept it like this, since we wanted to operate
-        # with full period lengths.
+
+        # The IV is a multiple of our period lenght
         iv = create_iv_epoch_rounded(int(period_length_ms / 1000))
-        print("IV:", binascii.hexlify(iv))
+        # print("IV:", binascii.hexlify(iv))
+
+        # WARNING: This IV may be out of synch for a fraction
+        # of the period if you synchronize with an MTD CoAP client.
+        # The FIRST syncrhonized MTD period should be shorter.
+        # We do not fix the first period length, in the interest of
+        # simplicity for our paper experiments. This way, we operate with
+        # full period lengths, independently of when the experiment started.
+        # (Otherwise we should discard the first period of every experiment)
 
         # By default the ChaCha2 library has lesser rounds, which will make
-        # it incompatible with Desktop versions of ChaCha20. Thus, we
-        # are using 20 rounds.
+        # it incompatible with Desktop versions of ChaCha20. Thus, we force
+        # it to use 20 rounds.
         crypt = chacha2.ChaCha(key, iv, rounds=20)
 
         # Using the static server port as data input
@@ -162,6 +173,8 @@ def experiment(N, periods, period_length_ms):
         print("[" + str(period) + "] port:", port)
         setup_coap(server, port, period_length_ms, period)
         print("[" + str(period) + "] attack:", server.stats[period].attack)
+
+    # Experiment Finished.
 
     # Creating/Opening the file to append the results
     # We create a file named "YYYY-mm-dd-results.txt" for the day
@@ -194,21 +207,20 @@ def main():
         return -1
 
     # Update the internal clock of the Pycom device
-    # Make sure to use the same NTP server on both client and server side
+    # Make sure both client and server side have synchronized time
     update_internal_clock()
 
-    # Possibility for running multiple experiments in a row
-    # Append the experiments one after one
-    N = [1024]
-    period_length_ms = [10 * 1000]  # in milliseconds (10 seconds)
+    # Experiment parameters
+    N = 1024  # number of hopping ports (e.g. 2048)
+    period_length_s_array = [10]  # Array of MTD period length in seconds (e.g. 10). (Allows multiple experiments that differ on period lenght)
+    periods = 5  # Number of periods (e.g. 5)
 
-    # Number of times we run each experiment
-    periods = 5
+    for period_length_seconds in period_length_s_array:
+        print("N=", N, ", T(seg)=",  period_length_seconds, " , Repeat=", periods)
+        print("BEGIN: ",  time.localtime())
 
-    for experiment_nr in range(len(N)):
-        print("N=", N, ", T(seg)=", int(period_length_ms[experiment_nr]/1000), ", Repeat=", periods)
-        print("BEGIN:", time.localtime())
-        experiment(N[experiment_nr], periods, period_length_ms[experiment_nr])
+        experiment(N, periods, period_length_seconds * 1000)  # Seconds to Mili, "experiment" uses miliseconds for the  period length
+
         print("END:", time.localtime())
 
     return 1
