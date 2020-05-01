@@ -13,9 +13,18 @@ As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, e
 
 IANVS CoAP Client-side code was not used for the experimental part of the current paper. Code release is to appear on an extension paper work.
 
-# I) Setting-Up and Running Experiments
+-----------------------------------------
+# Table of contents
+1.  [Setting-Up and Running Experiments](#setup)
+  - [IANVS CoAPServer [Set-up]](#lopy)
+  - [Attacker Code    [Set-up]](#hPing3)
+  - [Running Experiments](#running)
+2. [Collecting and Interpreting the Experimental Results](#reading)
 
-## A) IANVS CoAPServer [Set-up]
+---------------------------
+# I) Setting-Up and Running Experiments <a name="setup"></a>
+
+## A) IANVS CoAPServer [Set-up] <a name="lopy"></a>
 
 IANVS CoAPServer for LoPy4 Pycom device code is a MicroPyton project in folder `/microPython/`.
 Follow the [Pycom documentation](https://docs.pycom.io/gettingstarted/) to set up a Pycom Development environment.
@@ -44,7 +53,7 @@ The tuples tested in the paper are composed of different combinations of (**N**,
 
 
 
-## B) Attacker Code [Set-up]
+## B) Attacker Code [Set-up]  <a name="hPing3"></a>
 The attacker is implemented using the [hPing3](http://www.hping.org/hping3.html) TCP/UDP packet generator tool.
 
 In the port-hopping evaluation scenario of the paper, we only test if the attacker has found the current CoAPServer open port or not. Consequently, the UDP payload is not relevant, and we generate UDP packets with zero-length payload.
@@ -57,7 +66,7 @@ The attacker code is in the bash script file `/hPingTool/hPingRand.sh`.
 * The terminal running `hping3` should be on the same LAN as the LoPy4 (to avoid routing set up). We were connected over Ethernet on the same Wi-Fi Router as the LoPy4.
 
 
-## C) Running Experiments
+## C) Running Experiments  <a name="running"></a>
 
 #### 1) Important parameters to set/know:
 * **N**: number of hopping ports (e.g. 2048)
@@ -118,7 +127,7 @@ The experiment is concluded when `END` is shown, and the aggregated results are 
 ```
 (The meaning of that line is explained in the next subsection.)
 
-# II) Collecting and Interpreting the Experimental Results
+# II) Collecting and Interpreting the Experimental Results <a name="reading"></a>
 
 Experimental results are logged in the Pycom's internal flash (path `/flash`) and aggregated by day.
 
