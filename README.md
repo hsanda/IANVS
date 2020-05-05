@@ -41,8 +41,9 @@ The source code is known to be compatible with the following **Legacy** Pycom fi
 ```
 Pycom MicroPython 1.18.0    [v1.8.6-849-046b350]; LoPy with ESP32 (lorawan='1.0.2')
 Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237]; LoPy4 with ESP32
+Pycom MicroPython 1.19.0.b4 [v1.9.4-50f84dd]; LoPy4 with ESP32
 ```
- **WARNING:** We had issues with the Wi-Fi driver in versions of the firmware >1.18.2.r7.
+ **WARNING:** We had issues with the Wi-Fi driver in versions of the firmware >1.19.0.b4.
 
 
 ###  MTD Parameters Set-up
