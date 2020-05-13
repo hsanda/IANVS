@@ -107,7 +107,7 @@ def create_udp_port(byte_array):
 
 def update_internal_clock():
     """
-    Sync the internal clock on the PyCom with an NTP Server's time
+    Sync the internal clock on the Pycom with an NTP Server's time
     :return: 1
     """
     print("Updating internal clock", end='')
@@ -206,7 +206,7 @@ def main():
         print("Could not connect to Wi-Fi")
         return -1
 
-    # Update the internal clock of the PyCom device
+    # Update the internal clock of the Pycom device
     # Make sure both client and server side have synchronized time
     update_internal_clock()
 

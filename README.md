@@ -14,7 +14,7 @@ Renzo E. Navas, Håkon Sandaker, et al.
 IEEE, 2020 (forthcoming).
 ```
 This is the source code used to generate the experimental results of the paper.  
-As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, exact results can not be replicated. However, for a given set of IANVS-MTD and attacker parameters, the results statistically converge to the same values.
+As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, exact results cannot be replicated. However, for a given set of IANVS-MTD and attacker parameters, the results statistically converge to the same values.
 
 We share the data of the experiments we ran. They are located in the folder `/data/`.
 
