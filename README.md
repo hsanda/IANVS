@@ -37,7 +37,7 @@ Follow the [Pycom documentation](https://docs.pycom.io/gettingstarted/) to set u
 
 
 ### Pre-Requirements: Firmware version
-The source code is known to be compatible with the following **Legacy** Pycom firmwares ([Link](https://docs.pycom.io/advance/downgrade/)):
+The source code is known to be compatible with the following **Legacy** Pycom firmwares ([Link](https://docs.pycom.io/advance/downgrade/)), we include the firmware images in the folder `/firmware-lopy/`:
 ```
 Pycom MicroPython 1.18.0    [v1.8.6-849-046b350]; LoPy with ESP32 (lorawan='1.0.2')
 Pycom MicroPython 1.18.2.r7 [v1.8.6-849-df9f237]; LoPy4 with ESP32
