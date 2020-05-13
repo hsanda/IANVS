@@ -169,4 +169,4 @@ For example `2048,5,1461000,3` stands for an experiment where:
 
 
 ------
-END - 01/04/2020 - BEGIN
+END - 01/05/2020 - BEGIN
