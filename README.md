@@ -16,7 +16,9 @@ IEEE, 2020 (forthcoming).
 This is the source code used to generate the experimental results of the paper.  
 As we rely on a CSPRNG (i.e. ChaCha20) that uses the real date-time as inputs, exact results can not be replicated. However, for a given set of IANVS-MTD and attacker parameters, the results statistically converge to the same values.
 
-*NOTE:* IANVS CoAP Client-side code was not used for the experimental part of the current paper. Client-side Code release is to appear on an extension paper work.
+We share the data of the experiments we ran. They are located in the folder `/data/`.
+
+*NOTE:* IANVS CoAP Client-side code was not used for the experimental part of the current paper. Client-side Code release is to appear on future work.
 
 -----------------------------------------
 # Table of contents
