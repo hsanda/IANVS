@@ -34,7 +34,7 @@ def connect_to_network():
     """
     Connects to Wi-Fi Network
     Warning: we used firmware MicroPython 1.18.2.r7 [v1.8.6-849-df9f237], newer FW versions have an
-    issue with the Wi-FI driver as of 29/02/2020 (Scans OK but can not connect)
+    issue with the Wi-Fi driver as of 29/02/2020 (Scans OK but cannot connect)
 
     :return: True if we could connect to the Wi-Fi or otherwise False.
     """
@@ -123,7 +123,7 @@ def update_internal_clock():
 def experiment(N, periods, period_length_ms):
     """
     This function aggregates the main loop of the program
-    :param N: Number of ports to apply pour hopping
+    :param N: Number of ports to apply for hopping
     :param periods: Number of periods
     :param period_length_ms: Period length in milliseconds
     """
@@ -152,7 +152,7 @@ def experiment(N, periods, period_length_ms):
 
         # WARNING: This IV may be out of synch for a fraction
         # of the period if you synchronize with an MTD CoAP client.
-        # The FIRST syncrhonized MTD period should be shorter.
+        # The FIRST synchronized MTD period should be shorter.
         # We do not fix the first period length, in the interest of
         # simplicity for our paper experiments. This way, we operate with
         # full period lengths, independently of when the experiment started.
@@ -206,20 +206,20 @@ def main():
         print("Could not connect to Wi-Fi")
         return -1
 
-    # Update the internal clock of the Pycom device
+    # Update the internal clock of the PyCom device
     # Make sure both client and server side have synchronized time
     update_internal_clock()
 
     # Experiment parameters
-    N = 1024  # number of hopping ports (e.g. 2048)
-    period_length_s_array = [10]  # Array of MTD period length in seconds (e.g. 10). (Allows multiple experiments that differ on period lenght)
+    N = 1024  # Number of hopping ports (e.g. 2048)
+    period_length_s_array = [10]  # Array of MTD period length in seconds (e.g. 10). (Allows multiple experiments that differ on period length)
     periods = 5  # Number of periods (e.g. 5)
 
     for period_length_seconds in period_length_s_array:
         print("N=", N, ", T(seg)=",  period_length_seconds, " , Repeat=", periods)
         print("BEGIN: ",  time.localtime())
 
-        experiment(N, periods, period_length_seconds * 1000)  # Seconds to Mili, "experiment" uses miliseconds for the  period length
+        experiment(N, periods, period_length_seconds * 1000)  # Seconds to Mili, "experiment" uses miliseconds for the period length
 
         print("END:", time.localtime())
 
